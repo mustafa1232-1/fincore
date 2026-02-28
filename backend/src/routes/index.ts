@@ -1,0 +1,30 @@
+import { Router } from "express";
+import { authRouter } from "./auth.routes";
+import { setupRouter } from "./setup.routes";
+import { moduleRouter } from "./module.routes";
+import { accountingRouter } from "./accounting.routes";
+import { reportsRouter } from "./reports.routes";
+import { budgetingRouter } from "./budgeting.routes";
+import { forecastingRouter } from "./forecasting.routes";
+import { inventoryRouter } from "./inventory.routes";
+import { invoiceRouter } from "./invoice.routes";
+import { aiRouter } from "./ai.routes";
+import { dashboardRouter } from "./dashboard.routes";
+import { searchRouter } from "./search.routes";
+import { filesRouter } from "./files.routes";
+
+export const apiRouter = Router();
+
+apiRouter.use("/auth", authRouter);
+apiRouter.use("/setup", setupRouter);
+apiRouter.use("/modules", moduleRouter);
+apiRouter.use("/accounting", accountingRouter);
+apiRouter.use("/reports", reportsRouter);
+apiRouter.use("/budgets", budgetingRouter);
+apiRouter.use("/forecasts", forecastingRouter);
+apiRouter.use("/inventory", inventoryRouter);
+apiRouter.use("/invoices", invoiceRouter);
+apiRouter.use("/ai", aiRouter);
+apiRouter.use("/dashboard", dashboardRouter);
+apiRouter.use("/search", searchRouter);
+apiRouter.use("/files", filesRouter);
