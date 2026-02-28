@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:file_picker/file_picker.dart';
 
 class ApiService {
   ApiService._();
@@ -15,13 +16,12 @@ class ApiService {
     BaseOptions(
       baseUrl: const String.fromEnvironment(
         'API_BASE_URL',
-        defaultValue: 'https://keen-beauty-production-ed20.up.railway.app/api/v1',
+        defaultValue:
+            'https://keen-beauty-production-ed20.up.railway.app/api/v1',
       ),
       connectTimeout: const Duration(seconds: 15),
       receiveTimeout: const Duration(seconds: 15),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: {'Content-Type': 'application/json'},
     ),
   );
 
@@ -80,26 +80,29 @@ class ApiService {
   }) async {
     final response = await _dio.post<Map<String, dynamic>>(
       '/auth/login',
-      data: {
-        'tenantId': tenantId,
-        'email': email,
-        'password': password,
-      },
+      data: {'tenantId': tenantId, 'email': email, 'password': password},
     );
 
     return response.data ?? {};
   }
 
   Future<Map<String, dynamic>> fetchDashboardOverview() async {
-    final response = await _dio.get<Map<String, dynamic>>('/dashboard/overview');
+    final response = await _dio.get<Map<String, dynamic>>(
+      '/dashboard/overview',
+    );
     return response.data ?? {};
   }
 
   Future<Map<String, dynamic>> fetchModules() async {
     final response = await _dio.get<List<dynamic>>('/modules');
-    return {
-      'data': response.data ?? [],
-    };
+    return {'data': response.data ?? []};
+  }
+
+  Future<void> toggleModule({
+    required String moduleKey,
+    required bool enabled,
+  }) async {
+    await _dio.patch<void>('/modules/$moduleKey', data: {'enabled': enabled});
   }
 
   Future<Map<String, dynamic>> fetchGlobalSearch(String query) async {
@@ -111,17 +114,76 @@ class ApiService {
   }
 
   Future<List<dynamic>> fetchAccounts() async {
-    final response = await _dio.get<Map<String, dynamic>>('/accounting/accounts');
+    final response = await _dio.get<Map<String, dynamic>>(
+      '/accounting/accounts',
+    );
     return (response.data?['flat'] as List<dynamic>? ?? []);
   }
 
-  Future<List<dynamic>> fetchTrialBalance({required String from, required String to}) async {
+  Future<List<dynamic>> fetchTrialBalance({
+    required String from,
+    required String to,
+  }) async {
     final response = await _dio.get<Map<String, dynamic>>(
       '/reports/trial-balance',
       queryParameters: {'from': from, 'to': to},
     );
 
     return (response.data?['lines'] as List<dynamic>? ?? []);
+  }
+
+  Future<void> importTrialBalanceExcel({
+    required String from,
+    required String to,
+    required PlatformFile file,
+    bool postToLedger = true,
+  }) async {
+    if (file.bytes == null) {
+      throw Exception('File bytes are missing');
+    }
+
+    final formData = FormData.fromMap({
+      'from': from,
+      'to': to,
+      'postToLedger': '$postToLedger',
+      'file': MultipartFile.fromBytes(
+        file.bytes!,
+        filename: file.name,
+        contentType: DioMediaType.parse(
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ),
+      ),
+    });
+
+    await _dio.post<void>(
+      '/accounting/trial-balance/import',
+      data: formData,
+      options: Options(contentType: 'multipart/form-data'),
+    );
+  }
+
+  Future<List<int>> exportTrialBalanceExcel({
+    required String from,
+    required String to,
+  }) async {
+    final response = await _dio.get<List<int>>(
+      '/reports/trial-balance',
+      queryParameters: {'from': from, 'to': to, 'format': 'excel'},
+      options: Options(responseType: ResponseType.bytes),
+    );
+
+    return response.data ?? <int>[];
+  }
+
+  Future<void> createJournalEntry({
+    required String date,
+    required String description,
+    required List<Map<String, dynamic>> lines,
+  }) async {
+    await _dio.post<void>(
+      '/accounting/journals',
+      data: {'date': date, 'description': description, 'lines': lines},
+    );
   }
 
   Future<Map<String, dynamic>> fetchIncomeStatement({
@@ -166,10 +228,19 @@ class ApiService {
 
   String describeError(Object error) {
     if (error is DioException) {
-      final message = error.response?.data is Map<String, dynamic>
-          ? (error.response?.data['message'] as String? ?? error.message)
+      final status = error.response?.statusCode;
+      final body = error.response?.data;
+      final message = body is Map<String, dynamic>
+          ? (body['message'] as String? ?? error.message)
           : error.message;
-      return message ?? 'Network request failed';
+
+      if (status == 403) {
+        return 'Access denied (403). Enable this module from Modules page.';
+      }
+
+      return status != null
+          ? 'HTTP $status: ${message ?? 'Request failed'}'
+          : (message ?? 'Network request failed');
     }
 
     if (kDebugMode) {

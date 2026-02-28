@@ -12,6 +12,7 @@ class InventoryPage extends StatelessWidget {
       title: 'Inventory',
       subtitle: 'Items, valuation and stock movement monitoring.',
       columns: const ['name', 'sku', 'cost', 'price', 'quantity_on_hand'],
+      moduleKey: 'inventory',
       loader: () async {
         final rows = await ApiService.instance.fetchItems();
         return rows

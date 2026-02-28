@@ -92,10 +92,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   Future<void> logout() async {
     await _api.clearSession();
-    state = const AuthState(
-      loading: false,
-      isAuthenticated: false,
-    );
+    state = const AuthState(loading: false, isAuthenticated: false);
   }
 }
 

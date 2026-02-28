@@ -30,7 +30,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       return;
     }
 
-    final ok = await ref.read(authProvider.notifier).login(
+    final ok = await ref
+        .read(authProvider.notifier)
+        .login(
           tenantId: _tenantController.text.trim(),
           email: _emailController.text.trim(),
           password: _passwordController.text,
@@ -42,9 +44,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     if (ok) {
       context.go('/dashboard');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login successful.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Login successful.')));
     }
   }
 
@@ -111,8 +113,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       TextFormField(
                         controller: _passwordController,
                         obscureText: true,
-                        decoration: const InputDecoration(labelText: 'Password'),
-                        validator: (value) => (value == null || value.length < 8)
+                        decoration: const InputDecoration(
+                          labelText: 'Password',
+                        ),
+                        validator: (value) =>
+                            (value == null || value.length < 8)
                             ? 'Minimum 8 characters'
                             : null,
                       ),
@@ -133,11 +138,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               ? const SizedBox(
                                   width: 18,
                                   height: 18,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
                                 )
                               : const Text('Sign In'),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),

@@ -37,9 +37,11 @@ class _CommandPaletteDialogState extends State<_CommandPaletteDialog> {
   @override
   Widget build(BuildContext context) {
     final filtered = widget.actions
-        .where((action) =>
-            action.title.toLowerCase().contains(query.toLowerCase()) ||
-            action.description.toLowerCase().contains(query.toLowerCase()))
+        .where(
+          (action) =>
+              action.title.toLowerCase().contains(query.toLowerCase()) ||
+              action.description.toLowerCase().contains(query.toLowerCase()),
+        )
         .toList();
 
     return Dialog(
@@ -65,16 +67,19 @@ class _CommandPaletteDialogState extends State<_CommandPaletteDialog> {
                     final item = filtered[index];
                     return ListTile(
                       dense: true,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       title: Text(item.title),
                       subtitle: Text(item.description),
                       onTap: () => Navigator.of(context).pop(item),
                     );
                   },
-                  separatorBuilder: (context, index) => const Divider(height: 4),
+                  separatorBuilder: (context, index) =>
+                      const Divider(height: 4),
                   itemCount: filtered.length,
                 ),
-              )
+              ),
             ],
           ),
         ),

@@ -29,31 +29,28 @@ class KpiCard extends StatelessWidget {
           gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFFFFFFFF), Color(0xFFF7FAFC)],
+            colors: [Color(0xFF17223A), Color(0xFF121B2E)],
           ),
-          border: Border.all(color: const Color(0xFFE4E7EC)),
+          border: Border.all(color: const Color(0xFF2C3A57)),
           boxShadow: const [
             BoxShadow(
               color: Color(0x0A101828),
               blurRadius: 18,
               offset: Offset(0, 8),
-            )
+            ),
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            Text(title, style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: 8),
             Text(
               value,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: AppTheme.ink,
-                  ),
+                fontWeight: FontWeight.w800,
+                color: AppTheme.ink,
+              ),
             ),
             const SizedBox(height: 8),
             Container(
@@ -71,7 +68,7 @@ class KpiCard extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

@@ -11,7 +11,13 @@ class BudgetPage extends StatelessWidget {
     return DataModulePage(
       title: 'Budgeting',
       subtitle: 'Target profit, required sales and smart distribution.',
-      columns: const ['name', 'period', 'target_profit', 'required_sales', 'projected_profit'],
+      columns: const [
+        'name',
+        'period',
+        'target_profit',
+        'required_sales',
+        'projected_profit',
+      ],
       loader: () async {
         final rows = await ApiService.instance.fetchBudgets();
         return rows

@@ -89,7 +89,10 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Smart Dashboard', style: Theme.of(context).textTheme.headlineSmall),
+        Text(
+          'Smart Dashboard',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         const SizedBox(height: 4),
         Text('Interactive KPI cards and AI financial insights'),
         const SizedBox(height: 14),
@@ -123,7 +126,10 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Revenue vs Profit Trend', style: Theme.of(context).textTheme.titleMedium),
+                        Text(
+                          'Revenue vs Profit Trend',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
                         const SizedBox(height: 14),
                         Expanded(
                           child: LineChart(
@@ -132,7 +138,10 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                               borderData: FlBorderData(show: false),
                               titlesData: FlTitlesData(
                                 leftTitles: const AxisTitles(
-                                  sideTitles: SideTitles(showTitles: true, reservedSize: 40),
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    reservedSize: 40,
+                                  ),
                                 ),
                                 rightTitles: const AxisTitles(
                                   sideTitles: SideTitles(showTitles: false),
@@ -145,7 +154,8 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                                     showTitles: true,
                                     getTitlesWidget: (value, meta) {
                                       final index = value.toInt();
-                                      if (index < 0 || index >= data.history.length) {
+                                      if (index < 0 ||
+                                          index >= data.history.length) {
                                         return const SizedBox.shrink();
                                       }
                                       return Text(
@@ -163,8 +173,10 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                                   barWidth: 3,
                                   spots: List.generate(
                                     data.history.length,
-                                    (index) =>
-                                        FlSpot(index.toDouble(), data.history[index].revenue.toDouble()),
+                                    (index) => FlSpot(
+                                      index.toDouble(),
+                                      data.history[index].revenue.toDouble(),
+                                    ),
                                   ),
                                 ),
                                 LineChartBarData(
@@ -173,14 +185,16 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                                   barWidth: 3,
                                   spots: List.generate(
                                     data.history.length,
-                                    (index) =>
-                                        FlSpot(index.toDouble(), data.history[index].profit.toDouble()),
+                                    (index) => FlSpot(
+                                      index.toDouble(),
+                                      data.history[index].profit.toDouble(),
+                                    ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -195,9 +209,14 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('AI CFO Assistant', style: Theme.of(context).textTheme.titleMedium),
+                        Text(
+                          'AI CFO Assistant',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
                         const SizedBox(height: 8),
-                        const Text('Ask with real data. Example: ?? ???????? ???????? ?????? ??? 10000 ????'),
+                        const Text(
+                          'Ask with real data. Example: ?? ???????? ???????? ?????? ??? 10000 ????',
+                        ),
                         const SizedBox(height: 10),
                         TextField(
                           controller: _aiController,
@@ -216,7 +235,9 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                                 ? const SizedBox(
                                     width: 16,
                                     height: 16,
-                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
                                   )
                                 : const Text('Analyze'),
                           ),
@@ -226,15 +247,15 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                           child: SingleChildScrollView(
                             child: Text(_aiResponse ?? 'No analysis yet.'),
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
-        )
+        ),
       ],
     );
   }

@@ -67,7 +67,7 @@ class _SmartTableState extends State<SmartTable> {
                       });
                     },
                   ),
-                )
+                ),
               ],
             ),
             const SizedBox(height: 10),
@@ -77,7 +77,10 @@ class _SmartTableState extends State<SmartTable> {
                 columnSpacing: 12,
                 horizontalMargin: 10,
                 columns: widget.columns
-                    .map((column) => DataColumn2(label: Text(column), size: ColumnSize.M))
+                    .map(
+                      (column) =>
+                          DataColumn2(label: Text(column), size: ColumnSize.M),
+                    )
                     .toList(),
                 rows: pageRows
                     .map(
@@ -107,8 +110,8 @@ class _SmartTableState extends State<SmartTable> {
                     IconButton(
                       onPressed: _page > 0
                           ? () => setState(() {
-                                _page -= 1;
-                              })
+                              _page -= 1;
+                            })
                           : null,
                       icon: const Icon(Icons.chevron_left_rounded),
                     ),
@@ -116,15 +119,15 @@ class _SmartTableState extends State<SmartTable> {
                     IconButton(
                       onPressed: _page + 1 < totalPages
                           ? () => setState(() {
-                                _page += 1;
-                              })
+                              _page += 1;
+                            })
                           : null,
                       icon: const Icon(Icons.chevron_right_rounded),
                     ),
                   ],
-                )
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),

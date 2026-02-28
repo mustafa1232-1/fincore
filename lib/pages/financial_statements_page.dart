@@ -9,7 +9,11 @@ class FinancialStatementsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    final from = DateTime(now.year, now.month, 1).toIso8601String().substring(0, 10);
+    final from = DateTime(
+      now.year,
+      now.month,
+      1,
+    ).toIso8601String().substring(0, 10);
     final to = now.toIso8601String().substring(0, 10);
 
     return DataModulePage(
@@ -17,7 +21,10 @@ class FinancialStatementsPage extends StatelessWidget {
       subtitle: 'Income statement summary with key profitability ratios.',
       columns: const ['metric', 'value'],
       loader: () async {
-        final json = await ApiService.instance.fetchIncomeStatement(from: from, to: to);
+        final json = await ApiService.instance.fetchIncomeStatement(
+          from: from,
+          to: to,
+        );
         final totals = json['totals'] as Map<String, dynamic>? ?? {};
 
         return [

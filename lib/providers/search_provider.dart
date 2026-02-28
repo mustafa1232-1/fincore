@@ -44,11 +44,7 @@ class SearchNotifier extends StateNotifier<SearchState> {
 
     try {
       final result = await _api.fetchGlobalSearch(query);
-      state = SearchState(
-        loading: false,
-        query: query,
-        results: result,
-      );
+      state = SearchState(loading: false, query: query, results: result);
     } catch (error) {
       state = SearchState(
         loading: false,

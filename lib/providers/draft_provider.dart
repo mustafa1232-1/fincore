@@ -2,10 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DraftState {
-  const DraftState({
-    this.values = const {},
-    this.history = const [],
-  });
+  const DraftState({this.values = const {}, this.history = const []});
 
   final Map<String, String> values;
   final List<Map<String, String>> history;
@@ -67,7 +64,9 @@ class DraftNotifier extends StateNotifier<DraftState> {
 
   Future<void> _persist() async {
     final prefs = await SharedPreferences.getInstance();
-    final rows = state.values.entries.map((e) => '${e.key}::${e.value}').toList();
+    final rows = state.values.entries
+        .map((e) => '${e.key}::${e.value}')
+        .toList();
     await prefs.setStringList(_storageKey, rows);
   }
 }

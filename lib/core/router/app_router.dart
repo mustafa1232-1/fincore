@@ -40,33 +40,56 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
-      GoRoute(
-        path: '/login',
-        builder: (context, state) => const LoginPage(),
-      ),
+      GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
       ShellRoute(
-        builder: (context, state, child) => AppShell(
-          currentRoute: state.matchedLocation,
-          child: child,
-        ),
+        builder: (context, state, child) =>
+            AppShell(currentRoute: state.matchedLocation, child: child),
         routes: [
-          GoRoute(path: '/dashboard', builder: (context, state) => const DashboardPage()),
-          GoRoute(path: '/accounting', builder: (context, state) => const AccountingPage()),
-          GoRoute(path: '/trial-balance', builder: (context, state) => const TrialBalancePage()),
+          GoRoute(
+            path: '/dashboard',
+            builder: (context, state) => const DashboardPage(),
+          ),
+          GoRoute(
+            path: '/accounting',
+            builder: (context, state) => const AccountingPage(),
+          ),
+          GoRoute(
+            path: '/trial-balance',
+            builder: (context, state) => const TrialBalancePage(),
+          ),
           GoRoute(
             path: '/financial-statements',
             builder: (context, state) => const FinancialStatementsPage(),
           ),
-          GoRoute(path: '/budget', builder: (context, state) => const BudgetPage()),
-          GoRoute(path: '/forecast', builder: (context, state) => const ForecastPage()),
-          GoRoute(path: '/inventory', builder: (context, state) => const InventoryPage()),
+          GoRoute(
+            path: '/budget',
+            builder: (context, state) => const BudgetPage(),
+          ),
+          GoRoute(
+            path: '/forecast',
+            builder: (context, state) => const ForecastPage(),
+          ),
+          GoRoute(
+            path: '/inventory',
+            builder: (context, state) => const InventoryPage(),
+          ),
           GoRoute(path: '/pos', builder: (context, state) => const PosPage()),
-          GoRoute(path: '/reports', builder: (context, state) => const ReportsPage()),
-          GoRoute(path: '/modules', builder: (context, state) => const ModulesPage()),
-          GoRoute(path: '/settings', builder: (context, state) => const SettingsPage()),
+          GoRoute(
+            path: '/reports',
+            builder: (context, state) => const ReportsPage(),
+          ),
+          GoRoute(
+            path: '/modules',
+            builder: (context, state) => const ModulesPage(),
+          ),
+          GoRoute(
+            path: '/settings',
+            builder: (context, state) => const SettingsPage(),
+          ),
           GoRoute(
             path: '/search',
-            builder: (context, state) => SearchPage(query: state.uri.queryParameters['q'] ?? ''),
+            builder: (context, state) =>
+                SearchPage(query: state.uri.queryParameters['q'] ?? ''),
           ),
         ],
       ),

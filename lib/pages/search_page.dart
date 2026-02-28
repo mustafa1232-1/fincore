@@ -43,10 +43,13 @@ class _SearchPageState extends ConsumerState<SearchPage> {
       children: [
         Text('Global Search', style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 4),
-        Text('Instant results across accounts, entries, invoices, items and users.'),
+        Text(
+          'Instant results across accounts, entries, invoices, items and users.',
+        ),
         const SizedBox(height: 12),
         if (state.loading) const LinearProgressIndicator(),
-        if (state.error != null) Text(state.error!, style: const TextStyle(color: Color(0xFFDC2626))),
+        if (state.error != null)
+          Text(state.error!, style: const TextStyle(color: Color(0xFFDC2626))),
         const SizedBox(height: 8),
         Expanded(
           child: Card(
@@ -54,16 +57,36 @@ class _SearchPageState extends ConsumerState<SearchPage> {
               padding: const EdgeInsets.all(14),
               child: ListView(
                 children: [
-                  _block(context, 'Accounts', state.results['accounts'] as List<dynamic>? ?? []),
-                  _block(context, 'Journal Entries', state.results['journalEntries'] as List<dynamic>? ?? []),
-                  _block(context, 'Invoices', state.results['invoices'] as List<dynamic>? ?? []),
-                  _block(context, 'Items', state.results['items'] as List<dynamic>? ?? []),
-                  _block(context, 'Users', state.results['users'] as List<dynamic>? ?? []),
+                  _block(
+                    context,
+                    'Accounts',
+                    state.results['accounts'] as List<dynamic>? ?? [],
+                  ),
+                  _block(
+                    context,
+                    'Journal Entries',
+                    state.results['journalEntries'] as List<dynamic>? ?? [],
+                  ),
+                  _block(
+                    context,
+                    'Invoices',
+                    state.results['invoices'] as List<dynamic>? ?? [],
+                  ),
+                  _block(
+                    context,
+                    'Items',
+                    state.results['items'] as List<dynamic>? ?? [],
+                  ),
+                  _block(
+                    context,
+                    'Users',
+                    state.results['users'] as List<dynamic>? ?? [],
+                  ),
                 ],
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -74,12 +97,16 @@ class _SearchPageState extends ConsumerState<SearchPage> {
       children: [
         Text(title, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
-        ...items.take(8).map((item) => ListTile(
-              dense: true,
-              contentPadding: EdgeInsets.zero,
-              title: Text(item.values.join(' | ')),
-            )),
-        const Divider(height: 20)
+        ...items
+            .take(8)
+            .map(
+              (item) => ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                title: Text(item.values.join(' | ')),
+              ),
+            ),
+        const Divider(height: 20),
       ],
     );
   }

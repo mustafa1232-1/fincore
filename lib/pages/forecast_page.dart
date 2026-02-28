@@ -11,7 +11,13 @@ class ForecastPage extends StatelessWidget {
     return DataModulePage(
       title: 'Forecast Engine',
       subtitle: 'Trend + growth + seasonality forecast outputs.',
-      columns: const ['name', 'period_type', 'periods', 'start_date', 'growth_rate'],
+      columns: const [
+        'name',
+        'period_type',
+        'periods',
+        'start_date',
+        'growth_rate',
+      ],
       loader: () async {
         final rows = await ApiService.instance.fetchForecasts();
         return rows

@@ -3,11 +3,7 @@ import '../models/dashboard_models.dart';
 import '../services/api_service.dart';
 
 class DashboardState {
-  const DashboardState({
-    this.loading = false,
-    this.data,
-    this.error,
-  });
+  const DashboardState({this.loading = false, this.data, this.error});
 
   final bool loading;
   final DashboardOverview? data;
@@ -41,14 +37,12 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
         data: DashboardOverview.fromJson(json),
       );
     } catch (error) {
-      state = DashboardState(
-        loading: false,
-        error: _api.describeError(error),
-      );
+      state = DashboardState(loading: false, error: _api.describeError(error));
     }
   }
 }
 
-final dashboardProvider = StateNotifierProvider<DashboardNotifier, DashboardState>(
-  (ref) => DashboardNotifier(),
-);
+final dashboardProvider =
+    StateNotifierProvider<DashboardNotifier, DashboardState>(
+      (ref) => DashboardNotifier(),
+    );

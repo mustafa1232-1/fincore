@@ -26,13 +26,19 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     super.initState();
 
     final drafts = ref.read(draftProvider.notifier);
-    _companyController = TextEditingController(text: drafts.getValue('company_name'));
-    _currencyController = TextEditingController(text: drafts.getValue('currency'));
-    _countryController = TextEditingController(text: drafts.getValue('country'));
+    _companyController = TextEditingController(
+      text: drafts.getValue('company_name'),
+    );
+    _currencyController = TextEditingController(
+      text: drafts.getValue('currency'),
+    );
+    _countryController = TextEditingController(
+      text: drafts.getValue('country'),
+    );
 
-    _connectivitySubscription = Connectivity()
-        .onConnectivityChanged
-        .listen((results) => setState(() => _status = results.first));
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen(
+      (results) => setState(() => _status = results.first),
+    );
   }
 
   @override
@@ -79,8 +85,12 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       onPressed: () async {
                         await ref.read(draftProvider.notifier).undo();
                         final notifier = ref.read(draftProvider.notifier);
-                        _companyController.text = notifier.getValue('company_name');
-                        _currencyController.text = notifier.getValue('currency');
+                        _companyController.text = notifier.getValue(
+                          'company_name',
+                        );
+                        _currencyController.text = notifier.getValue(
+                          'currency',
+                        );
                         _countryController.text = notifier.getValue('country');
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -90,13 +100,15 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       },
                       icon: const Icon(Icons.undo_rounded),
                       label: const Text('Undo'),
-                    )
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: _companyController,
-                  onChanged: (value) => ref.read(draftProvider.notifier).saveField('company_name', value),
+                  onChanged: (value) => ref
+                      .read(draftProvider.notifier)
+                      .saveField('company_name', value),
                   decoration: const InputDecoration(
                     labelText: 'Company Name',
                     helperText: 'Auto saved',
@@ -105,7 +117,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 const SizedBox(height: 12),
                 TextField(
                   controller: _currencyController,
-                  onChanged: (value) => ref.read(draftProvider.notifier).saveField('currency', value),
+                  onChanged: (value) => ref
+                      .read(draftProvider.notifier)
+                      .saveField('currency', value),
                   decoration: const InputDecoration(
                     labelText: 'Currency',
                     helperText: 'Auto saved',
@@ -114,18 +128,20 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 const SizedBox(height: 12),
                 TextField(
                   controller: _countryController,
-                  onChanged: (value) => ref.read(draftProvider.notifier).saveField('country', value),
+                  onChanged: (value) => ref
+                      .read(draftProvider.notifier)
+                      .saveField('country', value),
                   decoration: const InputDecoration(
                     labelText: 'Country',
                     helperText: 'Auto saved',
                   ),
                 ),
                 const SizedBox(height: 10),
-                Text('Draft fields in memory: ${drafts.values.length}')
+                Text('Draft fields in memory: ${drafts.values.length}'),
               ],
             ),
           ),
-        )
+        ),
       ],
     );
   }

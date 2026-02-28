@@ -11,7 +11,14 @@ class PosPage extends StatelessWidget {
     return DataModulePage(
       title: 'POS & Invoices',
       subtitle: 'Sales invoices with auto-journal integration.',
-      columns: const ['invoice_number', 'customer_name', 'type', 'status', 'total_amount'],
+      columns: const [
+        'invoice_number',
+        'customer_name',
+        'type',
+        'status',
+        'total_amount',
+      ],
+      moduleKey: 'pos',
       loader: () async {
         final rows = await ApiService.instance.fetchInvoices();
         return rows

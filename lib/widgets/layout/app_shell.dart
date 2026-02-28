@@ -10,27 +10,59 @@ import '../../providers/search_provider.dart';
 import '../common/command_palette.dart';
 
 class AppShell extends ConsumerWidget {
-  const AppShell({
-    super.key,
-    required this.child,
-    required this.currentRoute,
-  });
+  const AppShell({super.key, required this.child, required this.currentRoute});
 
   final Widget child;
   final String currentRoute;
 
   static const navItems = <NavItem>[
-    NavItem(label: 'Dashboard', route: '/dashboard', icon: Icons.dashboard_outlined),
-    NavItem(label: 'Accounting', route: '/accounting', icon: Icons.account_balance_outlined),
-    NavItem(label: 'Trial Balance', route: '/trial-balance', icon: Icons.balance_outlined),
-    NavItem(label: 'Financials', route: '/financial-statements', icon: Icons.analytics_outlined),
-    NavItem(label: 'Budget', route: '/budget', icon: Icons.pie_chart_outline_rounded),
-    NavItem(label: 'Forecast', route: '/forecast', icon: Icons.timeline_outlined),
-    NavItem(label: 'Inventory', route: '/inventory', icon: Icons.inventory_2_outlined),
+    NavItem(
+      label: 'Dashboard',
+      route: '/dashboard',
+      icon: Icons.dashboard_outlined,
+    ),
+    NavItem(
+      label: 'Accounting',
+      route: '/accounting',
+      icon: Icons.account_balance_outlined,
+    ),
+    NavItem(
+      label: 'Trial Balance',
+      route: '/trial-balance',
+      icon: Icons.balance_outlined,
+    ),
+    NavItem(
+      label: 'Financials',
+      route: '/financial-statements',
+      icon: Icons.analytics_outlined,
+    ),
+    NavItem(
+      label: 'Budget',
+      route: '/budget',
+      icon: Icons.pie_chart_outline_rounded,
+    ),
+    NavItem(
+      label: 'Forecast',
+      route: '/forecast',
+      icon: Icons.timeline_outlined,
+    ),
+    NavItem(
+      label: 'Inventory',
+      route: '/inventory',
+      icon: Icons.inventory_2_outlined,
+    ),
     NavItem(label: 'POS', route: '/pos', icon: Icons.point_of_sale_outlined),
-    NavItem(label: 'Reports', route: '/reports', icon: Icons.insert_chart_outlined),
+    NavItem(
+      label: 'Reports',
+      route: '/reports',
+      icon: Icons.insert_chart_outlined,
+    ),
     NavItem(label: 'Modules', route: '/modules', icon: Icons.widgets_outlined),
-    NavItem(label: 'Settings', route: '/settings', icon: Icons.settings_outlined),
+    NavItem(
+      label: 'Settings',
+      route: '/settings',
+      icon: Icons.settings_outlined,
+    ),
   ];
 
   @override
@@ -63,22 +95,28 @@ class AppShell extends ConsumerWidget {
               }
               return null;
             },
-          )
+          ),
         },
         child: Scaffold(
-          drawer: isDesktop ? null : Drawer(child: _Sidebar(currentRoute: currentRoute)),
+          drawer: isDesktop
+              ? null
+              : Drawer(child: _Sidebar(currentRoute: currentRoute)),
           body: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Color(0xFFEAF7F4), AppTheme.canvas],
+                colors: [Color(0xFF0E1629), AppTheme.canvas],
               ),
             ),
             child: SafeArea(
               child: Row(
                 children: [
-                  if (isDesktop) SizedBox(width: 272, child: _Sidebar(currentRoute: currentRoute)),
+                  if (isDesktop)
+                    SizedBox(
+                      width: 272,
+                      child: _Sidebar(currentRoute: currentRoute),
+                    ),
                   Expanded(
                     child: Column(
                       children: [
@@ -92,14 +130,19 @@ class AppShell extends ConsumerWidget {
                               if (!isDesktop)
                                 Builder(
                                   builder: (context) => IconButton(
-                                    onPressed: () => Scaffold.of(context).openDrawer(),
-                                    icon: const Icon(Icons.menu_rounded),
+                                    onPressed: () =>
+                                        Scaffold.of(context).openDrawer(),
+                                    icon: const Icon(
+                                      Icons.menu_rounded,
+                                      color: AppTheme.ink,
+                                    ),
                                   ),
                                 ),
                               Expanded(
                                 child: TextField(
                                   onChanged: (value) => search.search(value),
-                                  onSubmitted: (value) => context.go('/search?q=$value'),
+                                  onSubmitted: (value) =>
+                                      context.go('/search?q=$value'),
                                   decoration: const InputDecoration(
                                     hintText:
                                         'Global Search: accounts, entries, invoices, items, users... ',
@@ -110,12 +153,17 @@ class AppShell extends ConsumerWidget {
                               const SizedBox(width: 10),
                               FilledButton.tonalIcon(
                                 onPressed: () async {
-                                  final action = await showCommandPalette(context, commandActions);
+                                  final action = await showCommandPalette(
+                                    context,
+                                    commandActions,
+                                  );
                                   if (context.mounted && action != null) {
                                     context.go(action.route);
                                   }
                                 },
-                                icon: const Icon(Icons.keyboard_command_key_rounded),
+                                icon: const Icon(
+                                  Icons.keyboard_command_key_rounded,
+                                ),
                                 label: const Text('Ctrl + K'),
                               ),
                               const SizedBox(width: 10),
@@ -125,8 +173,11 @@ class AppShell extends ConsumerWidget {
                                   ref.read(authProvider.notifier).logout();
                                   context.go('/login');
                                 },
-                                icon: const Icon(Icons.logout_rounded),
-                              )
+                                icon: const Icon(
+                                  Icons.logout_rounded,
+                                  color: AppTheme.ink,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -135,10 +186,10 @@ class AppShell extends ConsumerWidget {
                             padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
                             child: child,
                           ),
-                        )
+                        ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -158,7 +209,7 @@ class _Sidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(14),
-      color: const Color(0xFF0B132B),
+      color: const Color(0xFF080E1D),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -177,9 +228,9 @@ class _Sidebar extends StatelessWidget {
                 Text(
                   'FinCore AI ERP',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ],
             ),
@@ -195,11 +246,15 @@ class _Sidebar extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 6),
                   child: Material(
-                    color: selected ? const Color(0xFF19405A) : Colors.transparent,
+                    color: selected
+                        ? const Color(0xFF19405A)
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(12),
                     child: ListTile(
                       dense: true,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       leading: Icon(item.icon, color: Colors.white),
                       title: Text(
                         item.label,
@@ -216,7 +271,7 @@ class _Sidebar extends StatelessWidget {
           const Text(
             'Enterprise Financial System\nProduction Build',
             style: TextStyle(color: Color(0xFFA7B5CB), fontSize: 12),
-          )
+          ),
         ],
       ),
     );
