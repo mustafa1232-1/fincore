@@ -123,11 +123,14 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
             if (compact) ...[
               SizedBox(height: 310, child: _TrendCard(data: data)),
               const SizedBox(height: 12),
-              _AiAssistantCard(
-                controller: _aiController,
-                loading: _aiLoading,
-                response: _aiResponse,
-                onAsk: _askAi,
+              SizedBox(
+                height: 380,
+                child: _AiAssistantCard(
+                  controller: _aiController,
+                  loading: _aiLoading,
+                  response: _aiResponse,
+                  onAsk: _askAi,
+                ),
               ),
             ] else ...[
               SizedBox(
