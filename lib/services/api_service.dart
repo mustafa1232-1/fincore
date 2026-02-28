@@ -15,7 +15,7 @@ class ApiService {
     BaseOptions(
       baseUrl: const String.fromEnvironment(
         'API_BASE_URL',
-        defaultValue: 'http://localhost:8080/api/v1',
+        defaultValue: 'https://keen-beauty-production-ed20.up.railway.app/api/v1',
       ),
       connectTimeout: const Duration(seconds: 15),
       receiveTimeout: const Duration(seconds: 15),
