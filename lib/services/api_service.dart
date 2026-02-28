@@ -132,7 +132,7 @@ class ApiService {
     return (response.data?['lines'] as List<dynamic>? ?? []);
   }
 
-  Future<void> importTrialBalanceExcel({
+  Future<Map<String, dynamic>> importTrialBalanceExcel({
     required String from,
     required String to,
     required PlatformFile file,
@@ -155,20 +155,28 @@ class ApiService {
       ),
     });
 
-    await _dio.post<void>(
+    final response = await _dio.post<Map<String, dynamic>>(
       '/accounting/trial-balance/import',
       data: formData,
       options: Options(contentType: 'multipart/form-data'),
     );
+
+    return response.data ?? <String, dynamic>{};
   }
 
   Future<List<int>> exportTrialBalanceExcel({
     required String from,
     required String to,
+    bool template = false,
   }) async {
     final response = await _dio.get<List<int>>(
       '/reports/trial-balance',
-      queryParameters: {'from': from, 'to': to, 'format': 'excel'},
+      queryParameters: {
+        'from': from,
+        'to': to,
+        'format': 'excel',
+        'template': '$template',
+      },
       options: Options(responseType: ResponseType.bytes),
     );
 

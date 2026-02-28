@@ -49,18 +49,27 @@ export const reportsController = {
     const from = String(req.query.from);
     const to = String(req.query.to);
     const format = String(req.query.format ?? "json");
+    const template = String(req.query.template ?? "false") === "true";
 
-    const data = await accountingService.generateTrialBalance({
-      tenantId: req.user!.tenantId,
-      from,
-      to,
-      createdBy: req.user!.userId
-    });
+    const data = template
+      ? {
+          from,
+          to,
+          lines: await accountingService.generateTrialBalanceTemplate(req.user!.tenantId),
+          totals: { debit: 0, credit: 0 }
+        }
+      : await accountingService.generateTrialBalance({
+          tenantId: req.user!.tenantId,
+          from,
+          to,
+          createdBy: req.user!.userId
+        });
 
     if (format === "excel") {
       const buffer = await exportService.trialBalanceExcel({
         from,
         to,
+        templateMode: template,
         lines: data.lines
       });
 

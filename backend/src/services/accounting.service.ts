@@ -5,6 +5,7 @@ import { AppError, NotFoundError } from "../utils/errors";
 import { normalizePagination } from "../utils/pagination";
 
 interface TrialBalanceImportRow {
+  accountCode?: string;
   accountName: string;
   debit: number;
   credit: number;
@@ -227,6 +228,20 @@ export const accountingService = {
     };
   },
 
+  async generateTrialBalanceTemplate(tenantId: string) {
+    const accounts = await accountingRepository.listAccounts(tenantId);
+
+    return accounts.map((account) => ({
+      account_id: account.id,
+      code: account.code,
+      name: account.name,
+      type: account.type,
+      debit: 0,
+      credit: 0,
+      balance: 0
+    }));
+  },
+
   async importTrialBalanceFromExcel(input: {
     tenantId: string;
     userId: string;
@@ -251,6 +266,13 @@ export const accountingService = {
           Object.entries(entry).map(([key, value]) => [normalizeHeader(key), value])
         );
 
+        const accountCode = String(
+          normalizedEntries.account_code ??
+            normalizedEntries.code ??
+            normalizedEntries.accountcode ??
+            ""
+        ).trim();
+
         const accountName = String(
           normalizedEntries.account_name ?? normalizedEntries.account ?? normalizedEntries.name ?? ""
         ).trim();
@@ -258,9 +280,11 @@ export const accountingService = {
         const debit = toNumber(normalizedEntries.debit ?? normalizedEntries.dr ?? 0);
         const credit = toNumber(normalizedEntries.credit ?? normalizedEntries.cr ?? 0);
 
-        return { accountName, debit, credit };
+        return { accountCode, accountName, debit, credit };
       })
-      .filter((row) => row.accountName.length > 0 && (row.debit > 0 || row.credit > 0));
+      .filter(
+        (row) => (row.accountName.length > 0 || (row.accountCode ?? "").length > 0) && (row.debit > 0 || row.credit > 0)
+      );
 
     if (!rows.length) {
       throw new AppError("No valid trial balance rows found in Excel", 422);
@@ -268,33 +292,55 @@ export const accountingService = {
 
     const allAccounts = await accountingRepository.listAccounts(input.tenantId);
     const accountByName = new Map(allAccounts.map((account) => [account.name.toLowerCase(), account]));
+    const accountByCode = new Map(allAccounts.map((account) => [account.code.toLowerCase(), account]));
     const importedLines: Array<{ accountId: string; accountName: string; debit: number; credit: number }> = [];
 
     let createdCount = 0;
 
     for (let index = 0; index < rows.length; index += 1) {
       const row = rows[index];
-      const existing = accountByName.get(row.accountName.toLowerCase());
+      const existingByCode = row.accountCode
+        ? accountByCode.get(row.accountCode.toLowerCase())
+        : undefined;
+      const existingByName = row.accountName
+        ? accountByName.get(row.accountName.toLowerCase())
+        : undefined;
+      const existing = existingByCode ?? existingByName;
 
       let accountId = existing?.id;
+      let accountName = existing?.name ?? row.accountName;
+      let accountCode = row.accountCode;
 
       if (!accountId) {
-        const code = `9${String(Date.now()).slice(-5)}${String(index).padStart(3, "0")}`;
+        let code = (accountCode ?? "").trim();
+        if (!code) {
+          code = `9${String(Date.now()).slice(-5)}${String(index).padStart(3, "0")}`;
+        }
+        while (accountByCode.has(code.toLowerCase())) {
+          code = `${code}_${index}`;
+        }
+
+        if (!accountName) {
+          accountName = `Imported Account ${code}`;
+        }
+
         const created = await accountingRepository.createAccount({
           tenantId: input.tenantId,
           code,
-          name: row.accountName,
+          name: accountName,
           type: guessAccountType(row.debit, row.credit)
         });
 
-        accountByName.set(row.accountName.toLowerCase(), created);
+        accountByName.set(created.name.toLowerCase(), created);
+        accountByCode.set(created.code.toLowerCase(), created);
         accountId = created.id;
+        accountName = created.name;
         createdCount += 1;
       }
 
       importedLines.push({
         accountId,
-        accountName: row.accountName,
+        accountName,
         debit: Number(row.debit.toFixed(2)),
         credit: Number(row.credit.toFixed(2))
       });

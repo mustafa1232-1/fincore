@@ -15,18 +15,39 @@ export const exportService = {
   async trialBalanceExcel(input: {
     from: string;
     to: string;
-    lines: Array<{ code: string; name: string; debit: string | number; credit: string | number; balance: string | number }>;
+    templateMode?: boolean;
+    lines: Array<{ code: string; name: string; debit: string | number; credit: string | number; balance?: string | number }>;
   }): Promise<Buffer> {
     const workbook = new ExcelJS.Workbook();
-    const sheet = workbook.addWorksheet("Trial Balance");
+    const sheetName = input.templateMode ? "Trial Balance Template" : "Trial Balance";
+    const sheet = workbook.addWorksheet(sheetName);
 
-    sheet.addRow(["From", input.from, "To", input.to]);
-    sheet.addRow([]);
-    sheet.addRow(["Code", "Account", "Debit", "Credit", "Balance"]);
+    if (input.templateMode) {
+      // Template mode is designed for upload, so row 1 must be the true header row.
+      sheet.addRow(["Account Code", "Account Name", "Debit", "Credit"]);
+      input.lines.forEach((line) => {
+        sheet.addRow([line.code, line.name, Number(line.debit), Number(line.credit)]);
+      });
+      sheet.views = [{ state: "frozen", ySplit: 1 }];
 
-    input.lines.forEach((line) => {
-      sheet.addRow([line.code, line.name, Number(line.debit), Number(line.credit), Number(line.balance)]);
-    });
+      const guide = workbook.addWorksheet("Instructions");
+      guide.addRow(["Trial Balance Template"]);
+      guide.addRow([]);
+      guide.addRow(["From", input.from]);
+      guide.addRow(["To", input.to]);
+      guide.addRow([]);
+      guide.addRow([
+        "Fill Debit/Credit values then upload this file from the app. Account code or account name will be auto-matched."
+      ]);
+      guide.addRow(["Rows with zero debit and zero credit are ignored."]);
+    } else {
+      sheet.addRow(["From", input.from, "To", input.to]);
+      sheet.addRow([]);
+      sheet.addRow(["Code", "Account", "Debit", "Credit", "Balance"]);
+      input.lines.forEach((line) => {
+        sheet.addRow([line.code, line.name, Number(line.debit), Number(line.credit), Number(line.balance ?? 0)]);
+      });
+    }
 
     return Buffer.from(await workbook.xlsx.writeBuffer());
   },
