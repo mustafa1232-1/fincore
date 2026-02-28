@@ -13,10 +13,10 @@ export const validate = (schema: {
         req.body = schema.body.parse(req.body);
       }
       if (schema.query) {
-        (req as any).query = schema.query.parse(req.query);
+        schema.query.parse(req.query);
       }
       if (schema.params) {
-        (req as any).params = schema.params.parse(req.params);
+        schema.params.parse(req.params);
       }
       next();
     } catch (error) {
